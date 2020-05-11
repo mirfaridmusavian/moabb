@@ -153,7 +153,7 @@ class BaseParadigm(metaclass=ABCMeta):
             X = np.array(X).transpose((1, 2, 3, 0))
 
         metadata = pd.DataFrame(index=range(len(labels)))
-        return X, labels, metadata, epochs
+        return X, labels, metadata, epochs, raw_f
 
     def get_data(self, dataset, subjects=None):
         """
@@ -195,6 +195,7 @@ class BaseParadigm(metaclass=ABCMeta):
         labels = []
         metadata = []
         Epochs = []
+        Raws = []
         for subject, sessions in data.items():
             for session, runs in sessions.items():
                 for run, raw in runs.items():
@@ -205,13 +206,14 @@ class BaseParadigm(metaclass=ABCMeta):
                         # go to next
                         continue
 
-                    x, lbs, met, epoch = proc
+                    x, lbs, met, epoch, raw = proc
                     met['subject'] = subject
                     met['session'] = session
                     met['run'] = run
                     metadata.append(met)
                     
                     Epochs.append(epoch)
+                    Raws.append(raw)
 
                     # grow X and labels in a memory efficient way. can be slow
                     if len(X) > 0:
@@ -222,4 +224,4 @@ class BaseParadigm(metaclass=ABCMeta):
                         labels = lbs
 
         metadata = pd.concat(metadata, ignore_index=True)
-        return X, labels, metadata, Epochs
+        return X, labels, metadata, Epochs, Raws
