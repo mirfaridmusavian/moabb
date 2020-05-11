@@ -194,6 +194,7 @@ class BaseParadigm(metaclass=ABCMeta):
         X = []
         labels = []
         metadata = []
+        Epochs = []
         for subject, sessions in data.items():
             for session, runs in sessions.items():
                 for run, raw in runs.items():
@@ -204,11 +205,13 @@ class BaseParadigm(metaclass=ABCMeta):
                         # go to next
                         continue
 
-                    x, lbs, met = proc
+                    x, lbs, met, epoch = proc
                     met['subject'] = subject
                     met['session'] = session
                     met['run'] = run
                     metadata.append(met)
+                    
+                    Epochs.append(epoch)
 
                     # grow X and labels in a memory efficient way. can be slow
                     if len(X) > 0:
@@ -219,4 +222,4 @@ class BaseParadigm(metaclass=ABCMeta):
                         labels = lbs
 
         metadata = pd.concat(metadata, ignore_index=True)
-        return X, labels, metadata
+        return X, labels, metadata, Epochs
