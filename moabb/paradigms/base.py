@@ -153,7 +153,7 @@ class BaseParadigm(metaclass=ABCMeta):
             X = np.array(X).transpose((1, 2, 3, 0))
 
         metadata = pd.DataFrame(index=range(len(labels)))
-        return X, labels, metadata
+        return X, labels, metadata, epochs
 
     def get_data(self, dataset, subjects=None):
         """
